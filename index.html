@@ -214,6 +214,70 @@
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
+        .next-meeting-banner {
+            background: linear-gradient(135deg, #d4af37, #ffd700, #ffed4e);
+            color: #2d1b14;
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 
+                0 10px 30px rgba(212, 175, 55, 0.3),
+                0 0 0 1px rgba(255, 215, 0, 0.2) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-meeting-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .next-meeting-banner h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .next-meeting-info {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .next-meeting-date {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .next-meeting-location {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        .no-next-meeting {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
         .dark-mode .subtitle {
             color: rgba(255, 255, 255, 0.7);
         }
@@ -525,6 +589,27 @@
             .header-section {
                 margin-bottom: 2rem;
             }
+
+            .next-meeting-banner {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .next-meeting-banner h2 {
+                font-size: 1.1rem;
+            }
+
+            .next-meeting-date {
+                font-size: 1.2rem;
+            }
+
+            .next-meeting-info {
+                font-size: 1rem;
+            }
+
+            .next-meeting-location {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -539,6 +624,13 @@
             <h1>G300 - Resenha</h1>
             <p class="subtitle">Rede de Homens</p>
             <p class="meeting-time">🕐 Toda Terça-Feira às 19h30</p>
+        </div>
+        
+        <div id="nextMeetingBanner" class="next-meeting-banner">
+            <h2>🎯 Nossa Próxima Resenha Será</h2>
+            <div id="nextMeetingContent">
+                <div class="next-meeting-date">Calculando próximo evento...</div>
+            </div>
         </div>
         
         <div style="background: rgba(74, 144, 226, 0.1); border: 1px solid rgba(74, 144, 226, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
@@ -629,6 +721,70 @@
 
         // Initialize the agenda display
         loadAgendaFromSheets();
+
+        // Function to update next meeting banner
+        function updateNextMeetingBanner() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to start of day for accurate comparison
+            
+            // Find next upcoming event
+            const upcomingEvents = agendaItems.filter(item => {
+                const eventDate = parseDate(item.date);
+                return eventDate >= today;
+            }).sort((a, b) => {
+                const dateA = a.sortDate || formatBrazilianDate(a.date);
+                const dateB = b.sortDate || formatBrazilianDate(b.date);
+                return dateA.localeCompare(dateB);
+            });
+
+            const nextMeetingBanner = document.getElementById('nextMeetingBanner');
+            const nextMeetingContent = document.getElementById('nextMeetingContent');
+            
+            if (upcomingEvents.length > 0) {
+                const nextEvent = upcomingEvents[0];
+                const eventDate = parseDate(nextEvent.date);
+                
+                // Calculate days until event
+                const timeDiff = eventDate.getTime() - today.getTime();
+                const daysUntil = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                
+                let daysText = '';
+                if (daysUntil === 0) {
+                    daysText = '🔥 HOJE!';
+                } else if (daysUntil === 1) {
+                    daysText = '⏰ Amanhã';
+                } else if (daysUntil <= 7) {
+                    daysText = `📅 Em ${daysUntil} dias`;
+                } else {
+                    daysText = `📅 Em ${daysUntil} dias`;
+                }
+                
+                // Format the event date nicely
+                const eventDateFormatted = eventDate.toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                nextMeetingBanner.className = 'next-meeting-banner';
+                nextMeetingContent.innerHTML = `
+                    <div class="next-meeting-date">${nextEvent.date} - ${daysText}</div>
+                    <div class="next-meeting-info">📅 ${eventDateFormatted.charAt(0).toUpperCase() + eventDateFormatted.slice(1)}</div>
+                    <div class="next-meeting-info">👤 ${nextEvent.name}</div>
+                    ${nextEvent.status ? `<div class="next-meeting-info">📝 ${nextEvent.status}</div>` : ''}
+                    <div class="next-meeting-location">📍 Igreja [Local da Resenha] - 19h30</div>
+                `;
+            } else {
+                // No upcoming events
+                nextMeetingBanner.className = 'next-meeting-banner no-next-meeting';
+                nextMeetingContent.innerHTML = `
+                    <div class="next-meeting-date">📅 Nenhum evento agendado</div>
+                    <div class="next-meeting-info">Adicione novos eventos à agenda</div>
+                    <div class="next-meeting-location">📍 Igreja [Local da Resenha] - 19h30</div>
+                `;
+            }
+        }
 
         // Google Sheets API functions
         async function loadAgendaFromSheets() {
@@ -732,6 +888,7 @@
                 }
             ];
             displayAgenda();
+            updateNextMeetingBanner(); // Update banner with sample data
         }
 
         function parseCSVData(csvText) {
@@ -946,6 +1103,9 @@
                     </div>
                 `;
             }).join('');
+            
+            // Update the next meeting banner after displaying agenda
+            updateNextMeetingBanner();
         }
 
         function parseDate(dateStr) {
