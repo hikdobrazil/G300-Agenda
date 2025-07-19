@@ -139,9 +139,27 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 3px solid rgba(255, 255, 255, 0.3);
+            object-fit: cover;
         }
 
-        .logo-container:hover img {
+        .logo-fallback {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            border-radius: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2d1b14;
+            font-size: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .logo-container:hover img,
+        .logo-container:hover .logo-fallback {
             transform: scale(1.05) rotate(2deg);
             box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
         }
@@ -515,7 +533,8 @@
         <div class="header-section">
             <div class="logo-container">
                 <div class="logo-glow"></div>
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdvbGRHcmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmZmQ3MDAiLz4KPHN0b3Agb2Zmc2V0PSIzMCUiIHN0b3AtY29sb3I9IiNkNGFmMzciLz4KPHN0b3Agb2Zmc2V0PSI3MCUiIHN0b3AtY29sb3I9IiNmZmVkNGUiLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZGFhNTIwIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPCEtLSBCYWNrZ3JvdW5kIC0tPgo8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgcng9IjIwIiBmaWxsPSIjMmQxYjE0Ii8+CjwhLS0gR29sZCBCb3JkZXIgLS0+CjxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSIxOTAiIGhlaWdodD0iMTkwIiByeD0iMTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0idXJsKCNnb2xkR3JhZGllbnQpIiBzdHJva2Utd2lkdGg9IjMiLz4KPCEtLSBXaGVhdCBXcmVhdGggLS0+CjxwYXRoIGQ9Ik0zMCA2MEM0MCA1MCA2MCA0NSA4MCA1MEM5MCA1NSAxMDAgNjAgMTEwIDcwQzEzMCA4MCAxNTAgOTAgMTYwIDEwMEMxNjUgMTEwIDE2NSAxMjAgMTYwIDEzMEMxNTAgMTQwIDEzMCAxNDUgMTEwIDE0MEM5MCAxMzUgNzAgMTMwIDUwIDEzNUMzMCAxNDAgMjAgMTMwIDIwIDExMEMyMCAxMDAgMjUgODUgMzAgNjBaIiBmaWxsPSJ1cmwoI2dvbGRHcmFkaWVudCkiIG9wYWNpdHk9IjAuOCIvPgo8IS0tIERvdmUgLS0+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iNDAiIGZpbGw9InVybCgjZ29sZEdyYWRpZW50KSIvPgo8IS0tIERvdmUgV2luZ3MgLS0+CjxwYXRoIGQ9Ik03MCA4MEw5MCA5MEw4MCA3MEw3MCA4MFoiIGZpbGw9IiMyZDFiMTQiLz4KPHBhdGggZD0iTTEzMCA4MEwxMTAgOTBMMTIwIDcwTDEzMCA4MFoiIGZpbGw9IiMyZDFiMTQiLz4KPCEtLSBCZWFrIC0tPgo8Y2lyY2xlIGN4PSIxMDAiIGN5PSI5NSIgcj0iMyIgZmlsbD0iIzJkMWIxNCIvPgo8IS0tIEczMDAgVGV4dCAtLT4KPHRleHQgeD0iMTAwIiB5PSIxNzAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9InVybCgjZ29sZEdyYWRpZW50KSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RzMwMDwvdGV4dD4KPCEtLSBSZXNlbmhhIFN1YnRpdGxlIC0tPgo8dGV4dCB4PSIxMDAiIHk9IjE4NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSJ1cmwoI2dvbGRHcmFkaWVudCkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOCI+UmVzZW5oYTwvdGV4dD4KPC9zdmc+" alt="G300 Logo" />
+                <img src="./images/g300-logo.jpg" alt="G300 - Rede de Homens" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+                <div class="logo-fallback" style="display: none; width: 120px; height: 120px; background: linear-gradient(135deg, #d4af37, #ffd700); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #2d1b14; font-size: 1.5rem;">G300</div>
             </div>
             <h1>G300 - Resenha</h1>
             <p class="subtitle">Rede de Homens</p>
