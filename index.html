@@ -378,7 +378,12 @@
         
         <div style="background: rgba(74, 144, 226, 0.1); border: 1px solid rgba(74, 144, 226, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
             <strong>📊 Integração Google Sheets:</strong><br>
-            Esta agenda carrega dados do Google Sheets automaticamente. A planilha deve ter as colunas: Data, Nome/Evento, Status/Observações.
+            Para funcionar, a planilha precisa estar <strong>pública</strong>:<br>
+            1. Abra sua planilha no Google Sheets<br>
+            2. Clique em "Compartilhar" → "Alterar para qualquer pessoa com o link"<br>
+            3. Defina como "Visualizador"<br>
+            4. <strong>Teste</strong>: <a href="https://docs.google.com/spreadsheets/d/1hS2Se47oOOcyeNXSpYYhQi4u8N2AoAm5aHiFJ58MfLk/export?format=csv&gid=0" target="_blank" style="color: #4a90e2;">Clique aqui para testar se está público</a><br>
+            5. Se o teste mostrar dados CSV, clique "🔄 Atualizar do Sheets"
         </div>
         
         <div class="input-group">
@@ -465,29 +470,103 @@
             try {
                 showResult('📊 Carregando agenda do Google Sheets...');
                 
-                // For now, we'll use a public CSV export URL as a fallback
-                // This works without API key but requires the sheet to be public
+                // Test the CSV export URL
                 const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
                 
-                const response = await fetch(csvUrl);
-                const csvText = await response.text();
+                console.log('Tentando acessar:', csvUrl);
                 
-                if (csvText.includes('<!DOCTYPE html>')) {
-                    throw new Error('Sheet is not public or accessible');
+                const response = await fetch(csvUrl);
+                console.log('Status da resposta:', response.status);
+                console.log('URL final:', response.url);
+                
+                const csvText = await response.text();
+                console.log('Primeiros 200 caracteres da resposta:', csvText.substring(0, 200));
+                
+                // Check for various indicators that the sheet is not public
+                if (response.status === 400 || response.status === 403 || response.status === 302 ||
+                    csvText.includes('<!DOCTYPE html>') || 
+                    csvText.includes('Sign in') || 
+                    csvText.includes('Request failed') ||
+                    csvText.includes('sheets.googleusercontent.com')) {
+                    
+                    // Try alternative approach - load sample data for demo
+                    loadSampleData();
+                    showError('⚠️ Planilha não está pública. Carregando dados de exemplo...');
+                    showError('🔗 Link para testar se está pública: https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=0');
+                    return;
                 }
                 
                 agendaItems = parseCSVData(csvText);
                 displayAgenda();
-                showResult('✅ Agenda carregada com sucesso!');
+                
+                if (agendaItems.length > 0) {
+                    showResult(`✅ Agenda carregada! ${agendaItems.length} eventos encontrados.`);
+                } else {
+                    showResult('✅ Conectado ao Sheets, mas nenhum evento encontrado.');
+                }
                 
             } catch (error) {
                 console.error('Error loading from Google Sheets:', error);
-                showError('⚠️ Erro ao carregar do Google Sheets. Usando dados locais.');
-                
-                // Fallback to localStorage
-                agendaItems = JSON.parse(localStorage.getItem('g300-agenda') || '[]');
-                displayAgenda();
+                loadSampleData();
+                showError('⚠️ Erro ao conectar com Google Sheets. Carregando dados de exemplo...');
+                showError('📝 Para corrigir: Torne a planilha pública!');
             }
+        }
+
+        function loadSampleData() {
+            // Load sample data based on your actual sheet structure
+            agendaItems = [
+                {
+                    id: 1,
+                    date: '20/05/2025',
+                    name: 'Carlos',
+                    status: '',
+                    sortDate: '2025-05-20'
+                },
+                {
+                    id: 2,
+                    date: '10/06/2025',
+                    name: 'Gerson',
+                    status: 'Palavra: Junior G300',
+                    sortDate: '2025-06-10'
+                },
+                {
+                    id: 3,
+                    date: '17/06/2025',
+                    name: 'Tonyglay',
+                    status: 'Desmarcado (substituto: irmão Oziel)',
+                    sortDate: '2025-06-17'
+                },
+                {
+                    id: 4,
+                    date: '11/07/2025',
+                    name: 'Bruno Pacheco',
+                    status: '',
+                    sortDate: '2025-07-11'
+                },
+                {
+                    id: 5,
+                    date: '15/07/2025',
+                    name: 'Neto (irmão da Juju)',
+                    status: 'REMARCADO para 20 de outubro',
+                    sortDate: '2025-07-15'
+                },
+                {
+                    id: 6,
+                    date: '12/08/2025',
+                    name: 'Pastor Nilson',
+                    status: '',
+                    sortDate: '2025-08-12'
+                },
+                {
+                    id: 7,
+                    date: '11/11/2025',
+                    name: 'Pastor Leonardo Neres',
+                    status: '',
+                    sortDate: '2025-11-11'
+                }
+            ];
+            displayAgenda();
         }
 
         function parseCSVData(csvText) {
@@ -577,7 +656,12 @@
 
         function showError(text) {
             clearMessages();
-            errorArea.textContent = text;
+            // If errorArea already has content, append to it
+            if (errorArea.textContent) {
+                errorArea.textContent += ' ' + text;
+            } else {
+                errorArea.textContent = text;
+            }
             errorArea.style.animation = 'shake 0.5s ease-out';
         }
 
