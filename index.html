@@ -679,6 +679,7 @@
 
         // Google Sheets configuration
         const SHEET_ID = '1hS2Se47oOOcyeNXSpYYhQi4u8N2AoAm5aHiFJ58MfLk';
+        const SHEET_GID = '1282121858'; // Specific sheet tab ID
         const API_KEY = 'YOUR_GOOGLE_SHEETS_API_KEY'; // You need to get this from Google Cloud Console
         const SHEET_NAME = 'Sheet1'; // Change this to your actual sheet name
         
@@ -765,8 +766,8 @@
             try {
                 showResult('📊 Carregando agenda do Google Sheets...');
                 
-                // Test the CSV export URL
-                const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
+                // Test the CSV export URL with correct GID
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
                 
                 console.log('Tentando acessar:', csvUrl);
                 
@@ -787,7 +788,7 @@
                     // Try alternative approach - load sample data for demo
                     loadSampleData();
                     showError('⚠️ Planilha não está pública. Carregando dados de exemplo...');
-                    showError('🔗 Link para testar se está pública: https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=0');
+                    showError('🔗 Link para testar se está pública: https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=' + SHEET_GID);
                     return;
                 }
                 
