@@ -743,7 +743,7 @@
                     <div class="next-meeting-date">${nextEvent.date} - ${daysText}</div>
                     <div class="next-meeting-info">📅 ${eventDateFormatted.charAt(0).toUpperCase() + eventDateFormatted.slice(1)}</div>
                     <div class="next-meeting-info">👤 ${nextEvent.name}</div>
-                    <div class="next-meeting-location">� ${nextEvent.status || 'Local [A definir]'} - 19h30</div>
+                    <div class="next-meeting-location">� ${nextEvent.status || 'Endereco [A divulgar]'} - 19h30</div>
                 `;
             } else {
                 // No upcoming events
@@ -751,7 +751,7 @@
                 nextMeetingContent.innerHTML = `
                     <div class="next-meeting-date">📅 Nenhum evento agendado</div>
                     <div class="next-meeting-info">Adicione novos eventos à agenda</div>
-                    <div class="next-meeting-location">📍 Local [A definir] - 19h30</div>
+                    <div class="next-meeting-location">📍 Endereco [A divulgar] - 19h30</div>
                 `;
             }
         }
