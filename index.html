@@ -142,24 +142,7 @@
             object-fit: cover;
         }
 
-        .logo-fallback {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #d4af37, #ffd700);
-            border-radius: 20px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #2d1b14;
-            font-size: 1.5rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .logo-container:hover img,
-        .logo-container:hover .logo-fallback {
+        .logo-container:hover img {
             transform: scale(1.05) rotate(2deg);
             box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
         }
@@ -278,132 +261,46 @@
             50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
-        .team-section {
-            margin: 2rem 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .team-photo-container {
-            position: relative;
-            margin: 1.5rem 0;
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(212, 175, 55, 0.2) inset;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .team-photo-container:hover {
-            transform: translateY(-8px);
-            box-shadow: 
-                0 30px 80px rgba(0, 0, 0, 0.4),
-                0 0 0 2px rgba(212, 175, 55, 0.4) inset;
-        }
-
-        .team-photo {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            object-position: center;
-            transition: all 0.3s ease;
-            filter: brightness(0.9) contrast(1.1);
-        }
-
-        .team-photo:hover {
-            filter: brightness(1) contrast(1.2);
-            transform: scale(1.02);
-        }
-
-        .team-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(
-                to top,
-                rgba(45, 27, 20, 0.95) 0%,
-                rgba(45, 27, 20, 0.8) 40%,
-                rgba(45, 27, 20, 0.3) 70%,
-                transparent 100%
-            );
-            padding: 2rem 1.5rem 1.5rem;
-            color: white;
-            transform: translateY(0);
-            transition: all 0.3s ease;
-        }
-
-        .team-overlay h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #d4af37, #ffd700, #ffed4e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .team-overlay p {
-            font-size: 1rem;
-            opacity: 0.9;
-            line-height: 1.4;
-            margin-bottom: 0;
-        }
-
-        .team-stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 15px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .team-stat {
-            text-align: center;
-        }
-
-        .team-stat-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #d4af37;
-            display: block;
-        }
-
-        .team-stat-label {
-            font-size: 0.8rem;
-            opacity: 0.8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Alternative: Background version (uncomment to use as background) */
-        /*
-        .container {
-            position: relative;
-        }
-
+        /* Background version with G300 team photo */
         .container::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: 
-                radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%),
+                linear-gradient(
+                    135deg,
+                    rgba(45, 27, 20, 0.85) 0%,
+                    rgba(45, 27, 20, 0.75) 40%,
+                    rgba(45, 27, 20, 0.85) 100%
+                ),
                 url('./images/homens.jpeg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
-            opacity: 0.05;
+            background-repeat: no-repeat;
+            opacity: 0.15;
             pointer-events: none;
             z-index: -1;
-            filter: blur(1px);
+            filter: blur(0.5px);
+            border-radius: 28px;
         }
-        */
+
+        .dark-mode .container::after {
+            background: 
+                linear-gradient(
+                    135deg,
+                    rgba(26, 32, 44, 0.90) 0%,
+                    rgba(26, 32, 44, 0.80) 40%,
+                    rgba(26, 32, 44, 0.90) 100%
+                ),
+                url('./images/homens.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.12;
+        }
 
         .dark-mode .subtitle {
             color: rgba(255, 255, 255, 0.7);
@@ -737,34 +634,6 @@
             .next-meeting-location {
                 font-size: 0.9rem;
             }
-
-            .team-photo {
-                height: 200px;
-            }
-
-            .team-overlay {
-                padding: 1.5rem 1rem 1rem;
-            }
-
-            .team-overlay h3 {
-                font-size: 1.2rem;
-            }
-
-            .team-overlay p {
-                font-size: 0.9rem;
-            }
-
-            .team-stats {
-                padding: 0.8rem;
-            }
-
-            .team-stat-number {
-                font-size: 1.2rem;
-            }
-
-            .team-stat-label {
-                font-size: 0.7rem;
-            }
         }
     </style>
 </head>
@@ -773,40 +642,11 @@
         <div class="header-section">
             <div class="logo-container">
                 <div class="logo-glow"></div>
-                <img src="./images/g300-logo.jpg" alt="G300 - Rede de Homens" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-                <div class="logo-fallback" style="display: none; width: 120px; height: 120px; background: linear-gradient(135deg, #d4af37, #ffd700); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #2d1b14; font-size: 1.5rem;">G300</div>
+                <img src="./images/g300-logo.jpg" alt="G300 - Rede de Homens" onerror="this.style.display='none';" />
             </div>
             <h1>G300 - Resenha</h1>
             <p class="subtitle">Rede de Homens</p>
             <p class="meeting-time">🕐 Toda Terça-Feira às 19h30</p>
-        </div>
-        
-        <div class="team-section">
-            <div class="team-photo-container">
-                <img src="./images/homens.jpeg" alt="Homens do G300 - Rede de Homens" class="team-photo" onerror="this.parentElement.style.display='none';" />
-                <div class="team-overlay">
-                    <h3>👥 Nossos Irmãos G300</h3>
-                    <p>Unidos pela fé, fortalecidos pela comunhão</p>
-                </div>
-            </div>
-            <div class="team-stats">
-                <div class="team-stat">
-                    <span class="team-stat-number">🙏</span>
-                    <span class="team-stat-label">Oração</span>
-                </div>
-                <div class="team-stat">
-                    <span class="team-stat-number">📖</span>
-                    <span class="team-stat-label">Palavra</span>
-                </div>
-                <div class="team-stat">
-                    <span class="team-stat-number">🤝</span>
-                    <span class="team-stat-label">Comunhão</span>
-                </div>
-                <div class="team-stat">
-                    <span class="team-stat-number">💪</span>
-                    <span class="team-stat-label">Força</span>
-                </div>
-            </div>
         </div>
         
         <div id="nextMeetingBanner" class="next-meeting-banner">
@@ -816,60 +656,22 @@
             </div>
         </div>
         
-        <div style="background: rgba(74, 144, 226, 0.1); border: 1px solid rgba(74, 144, 226, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
-            <strong>📊 Integração Google Sheets:</strong><br>
-            Para funcionar, a planilha precisa estar <strong>pública</strong>:<br>
-            1. Abra sua planilha no Google Sheets<br>
-            2. Clique em "Compartilhar" → "Alterar para qualquer pessoa com o link"<br>
-            3. Defina como "Visualizador"<br>
-            4. <strong>Teste</strong>: <a href="https://docs.google.com/spreadsheets/d/1hS2Se47oOOcyeNXSpYYhQi4u8N2AoAm5aHiFJ58MfLk/export?format=csv&gid=0" target="_blank" style="color: #4a90e2;">Clique aqui para testar se está público</a><br>
-            5. Se o teste mostrar dados CSV, clique "🔄 Atualizar do Sheets"
-        </div>
-        
-        <div class="input-group">
-            <label for="dateInput">Data</label>
-            <input type="date" id="dateInput" aria-label="Data do evento" />
-        </div>
-        
-        <div class="input-group">
-            <label for="nameInput">Nome/Evento</label>
-            <input type="text" id="nameInput" placeholder="Ex: Pastor João, Estudo Bíblico..." aria-label="Nome ou evento" />
-        </div>
-
-        <div class="input-group">
-            <label for="statusInput">Status/Observações</label>
-            <input type="text" id="statusInput" placeholder="Observações sobre o evento..." aria-label="Status ou observações" />
-        </div>
-        
-        <button id="addBtn" class="convert-btn">➕ Adicionar à Agenda</button>
-        
-        <div class="agenda-list" id="agendaList">
-            <!-- Agenda items will be displayed here -->
-        </div>
-        
-        <div class="result-area">
-            <p id="resultArea"></p>
-            <p id="errorArea"></p>
-        </div>
-        
         <div class="toggle-mode">
-            <button id="refreshBtn" class="theme-toggle" style="background: var(--success-gradient); margin-right: 1rem;">🔄 Atualizar do Sheets</button>
-            <button id="clearAllBtn" class="theme-toggle" style="background: var(--secondary-gradient); margin-right: 1rem;">🗑️ Limpar Agenda</button>
             <button id="toggleThemeBtn" class="theme-toggle">🌙 Alternar Tema</button>
         </div>
     </div>
 
     <script>
-        const dateInput = document.getElementById('dateInput');
-        const nameInput = document.getElementById('nameInput');
-        const statusInput = document.getElementById('statusInput');
-        const addBtn = document.getElementById('addBtn');
-        const agendaList = document.getElementById('agendaList');
-        const resultArea = document.getElementById('resultArea');
-        const errorArea = document.getElementById('errorArea');
+        const dateInput = null; // Removed date input
+        const nameInput = null; // Removed name input
+        const statusInput = null; // Removed status input
+        const addBtn = null; // Removed add button
+        const agendaList = null; // Removed agenda list
+        const resultArea = null; // Removed result area
+        const errorArea = null; // Removed error area
         const toggleThemeBtn = document.getElementById('toggleThemeBtn');
-        const clearAllBtn = document.getElementById('clearAllBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
+        const clearAllBtn = null; // Removed clear all button
+        const refreshBtn = null; // Removed refresh button
 
         // Google Sheets configuration
         const SHEET_ID = '1hS2Se47oOOcyeNXSpYYhQi4u8N2AoAm5aHiFJ58MfLk';
@@ -886,20 +688,6 @@
         }
 
         // Event listeners
-        addBtn.addEventListener('click', addAgendaItem);
-        clearAllBtn.addEventListener('click', clearAllItems);
-        refreshBtn.addEventListener('click', loadAgendaFromSheets);
-        
-        // Add enter key support for all inputs
-        [dateInput, nameInput, statusInput].forEach(input => {
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    addAgendaItem();
-                }
-            });
-        });
-
-        dateInput.addEventListener('input', clearMessages);
         toggleThemeBtn.addEventListener('click', toggleTheme);
 
         // Initialize the agenda display
@@ -955,8 +743,7 @@
                     <div class="next-meeting-date">${nextEvent.date} - ${daysText}</div>
                     <div class="next-meeting-info">📅 ${eventDateFormatted.charAt(0).toUpperCase() + eventDateFormatted.slice(1)}</div>
                     <div class="next-meeting-info">👤 ${nextEvent.name}</div>
-                    ${nextEvent.status ? `<div class="next-meeting-info">📝 ${nextEvent.status}</div>` : ''}
-                    <div class="next-meeting-location">📍 Igreja [Local da Resenha] - 19h30</div>
+                    <div class="next-meeting-location">� ${nextEvent.status || 'Local [A definir]'} - 19h30</div>
                 `;
             } else {
                 // No upcoming events
@@ -964,7 +751,7 @@
                 nextMeetingContent.innerHTML = `
                     <div class="next-meeting-date">📅 Nenhum evento agendado</div>
                     <div class="next-meeting-info">Adicione novos eventos à agenda</div>
-                    <div class="next-meeting-location">📍 Igreja [Local da Resenha] - 19h30</div>
+                    <div class="next-meeting-location">📍 Local [A definir] - 19h30</div>
                 `;
             }
         }
@@ -1147,91 +934,21 @@
         }
 
         function clearMessages() {
-            resultArea.textContent = '';
-            errorArea.textContent = '';
-            resultArea.style.animation = 'none';
-            errorArea.style.animation = 'none';
+            // Result and error areas removed
         }
 
         function showResult(text) {
-            clearMessages();
-            resultArea.textContent = text;
-            resultArea.style.animation = 'slideIn 0.5s ease-out';
+            // Result area removed - no display needed
         }
 
         function showError(text) {
-            clearMessages();
-            // If errorArea already has content, append to it
-            if (errorArea.textContent) {
-                errorArea.textContent += ' ' + text;
-            } else {
-                errorArea.textContent = text;
-            }
-            errorArea.style.animation = 'shake 0.5s ease-out';
+            // Error area removed - no display needed
         }
 
-        function addAgendaItem() {
-            const date = dateInput.value;
-            const name = nameInput.value.trim();
-            const status = statusInput.value.trim();
-            
-            if (!date) {
-                showError('⚠️ Por favor, selecione uma data.');
-                dateInput.focus();
-                return;
-            }
-
-            if (!name) {
-                showError('⚠️ Por favor, digite o nome ou evento.');
-                nameInput.focus();
-                return;
-            }
-            
-            // Convert date from YYYY-MM-DD to DD/MM/YYYY (Brazilian format)
-            const dateObj = new Date(date);
-            const brazilianDate = `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth() + 1).toString().padStart(2, '0')}/${dateObj.getFullYear()}`;
-            
-            const newItem = {
-                id: Date.now(),
-                date: brazilianDate,
-                name,
-                status: status || '',
-                sortDate: date
-            };
-
-            agendaItems.push(newItem);
-            saveAgenda();
-            displayAgenda();
-            clearForm();
-            
-            showResult(`✅ "${name}" adicionado à agenda! (Salvo localmente)`);
-        }
-
-        function deleteItem(id) {
-            agendaItems = agendaItems.filter(item => item.id !== id);
-            saveAgenda();
-            displayAgenda();
-            showResult('🗑️ Item removido da agenda!');
-        }
-
-        function clearAllItems() {
-            if (agendaItems.length === 0) {
-                showError('📅 A agenda já está vazia!');
-                return;
-            }
-
-            if (confirm('Tem certeza que deseja limpar toda a agenda?')) {
-                agendaItems = [];
-                saveAgenda();
-                displayAgenda();
-                showResult('🧹 Agenda limpa com sucesso!');
-            }
-        }
+        // Removed addAgendaItem, deleteItem, clearForm, clearAllItems functions
 
         function clearForm() {
-            dateInput.value = '';
-            nameInput.value = '';
-            statusInput.value = '';
+            // Form inputs removed
         }
 
         function saveAgenda() {
@@ -1239,55 +956,7 @@
         }
 
         function displayAgenda() {
-            if (agendaItems.length === 0) {
-                agendaList.innerHTML = `
-                    <div class="agenda-item" style="text-align: center; opacity: 0.6;">
-                        <h3>📅 Agenda Vazia</h3>
-                        <p>Adicione eventos à agenda do grupo G300</p>
-                    </div>
-                `;
-                return;
-            }
-
-            // Sort items by date (using sortDate for proper chronological order)
-            const sortedItems = agendaItems.sort((a, b) => {
-                const dateA = a.sortDate || a.date;
-                const dateB = b.sortDate || b.date;
-                return dateA.localeCompare(dateB);
-            });
-
-            agendaList.innerHTML = sortedItems.map(item => {
-                const statusDisplay = item.status ? 
-                    `<p class="status">📝 ${item.status}</p>` : 
-                    '<p class="status" style="opacity: 0.5;">📝 Sem observações</p>';
-                
-                // Check if date is in the past, today, or future
-                const today = new Date();
-                const itemDate = parseDate(item.date);
-                let dateClass = '';
-                if (itemDate < today.setHours(0,0,0,0)) {
-                    dateClass = 'style="color: #999; opacity: 0.7;"'; // Past events
-                } else if (itemDate.toDateString() === new Date().toDateString()) {
-                    dateClass = 'style="color: #e76f51; font-weight: bold;"'; // Today
-                } else {
-                    dateClass = 'style="color: #4a90e2;"'; // Future events
-                }
-                
-                return `
-                    <div class="agenda-item">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <div style="flex: 1;">
-                                <h3 ${dateClass}>� ${item.date}</h3>
-                                <p class="name">👤 ${item.name}</p>
-                                ${statusDisplay}
-                            </div>
-                            <button class="delete-btn" onclick="deleteItem(${item.id})">🗑️</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            // Update the next meeting banner after displaying agenda
+            // Agenda display removed - only banner remains
             updateNextMeetingBanner();
         }
 
@@ -1302,16 +971,7 @@
             return new Date(dateStr);
         }
 
-        // Add some interactive features
-        [dateInput, nameInput, statusInput].forEach(input => {
-            input.addEventListener('focus', () => {
-                input.parentElement.style.transform = 'scale(1.02)';
-            });
-
-            input.addEventListener('blur', () => {
-                input.parentElement.style.transform = 'scale(1)';
-            });
-        });
+        // Interactive features removed
     </script>
 </body>
 </html>
