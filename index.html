@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -827,25 +827,28 @@
         /* Status Indicator */
         .status-indicator {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
+            justify-content: flex-start;
             margin: 1.5rem 0 2rem 0;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 1.5rem;
             background: var(--card-bg-light);
             border-radius: 20px;
             border: 1px solid rgba(212, 175, 55, 0.3);
             -webkit-backdrop-filter: blur(15px);
             backdrop-filter: blur(15px);
             transition: all 0.4s ease;
+            text-align: left;
         }
 
         .status-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 12px;
+            margin-top: 4px;
             background: #ffd700;
             animation: status-pulse 2s ease-in-out infinite;
+            flex-shrink: 0;
         }
 
         .status-dot.connected {
@@ -869,6 +872,8 @@
             font-size: 0.9rem;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+            flex: 1;
         }
 
         @keyframes float {
@@ -1062,7 +1067,7 @@
             } else if (status === 'error') {
                 statusDot.classList.add('error');
             }
-            statusText.textContent = message;
+            statusText.innerHTML = message;
         }
 
         // Show initial loading
@@ -1207,7 +1212,7 @@
                 displayAgenda();
                 
                 if (agendaItems.length > 0) {
-                    updateStatusIndicator('connected', `✅ temos + ${agendaItems.length} resenhas agendadas!`);
+                    updatePsychologicalStatus();
                     showResult(`✅ Agenda carregada! ${agendaItems.length} eventos encontrados.`);
                 } else {
                     updateStatusIndicator('connected', 'Conectado - Nenhum evento');
@@ -1292,7 +1297,7 @@
             ];
             displayAgenda();
             updateNextMeetingBanner(); // Update banner with sample data
-            updateStatusIndicator('error', 'Usando dados de exemplo');
+            updatePsychologicalStatusError();
         }
 
         function parseCSVData(csvText) {
@@ -1444,6 +1449,139 @@
                 }
             }
             return new Date(dateStr);
+        }
+
+        function updatePsychologicalStatus() {
+            const psychologicalMessage = generatePsychologicalMessage();
+            updateStatusIndicator('connected', psychologicalMessage);
+        }
+
+        function updatePsychologicalStatusError() {
+            const psychologicalMessage = generatePsychologicalMessage();
+            updateStatusIndicator('error', psychologicalMessage);
+        }
+
+        function findNextAvailableMonth() {
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth(); // 0-11
+            
+            // Get all months that have events scheduled
+            const scheduledMonths = new Set();
+            agendaItems.forEach(item => {
+                const eventDate = parseDate(item.date);
+                if (eventDate >= today) {
+                    const monthKey = `${eventDate.getFullYear()}-${eventDate.getMonth()}`;
+                    scheduledMonths.add(monthKey);
+                }
+            });
+            
+            // Find next available month (starting from current month)
+            for (let i = 0; i < 24; i++) { // Check up to 2 years ahead
+                const checkDate = new Date(currentYear, currentMonth + i, 1);
+                const monthKey = `${checkDate.getFullYear()}-${checkDate.getMonth()}`;
+                
+                if (!scheduledMonths.has(monthKey)) {
+                    const monthNames = [
+                        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                    ];
+                    return monthNames[checkDate.getMonth()];
+                }
+            }
+            
+            return 'Dezembro'; // Fallback
+        }
+
+        function calculatePsychologyMetrics() {
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            
+            // Calcular quantos meses restam no ano
+            const monthsLeftInYear = 12 - currentMonth;
+            
+            // Calcular quantos eventos futuros existem
+            const futureEvents = agendaItems.filter(item => {
+                const eventDate = parseDate(item.date);
+                return eventDate >= today;
+            }).length;
+            
+            // Calcular ocupação percentual - limitando a máximo de 85% para não mostrar 100%
+            let occupancyRate = Math.round((futureEvents / monthsLeftInYear) * 100);
+            if (occupancyRate > 85) {
+                occupancyRate = Math.min(85, occupancyRate);
+            }
+            if (occupancyRate < 15) {
+                occupancyRate = Math.max(15, occupancyRate);
+            }
+            
+            // Calcular dias até o fim do ano
+            const endOfYear = new Date(currentYear, 11, 31);
+            const daysToEndYear = Math.ceil((endOfYear - today) / (1000 * 60 * 60 * 24));
+            
+            // Calcular urgência baseada na quantidade de eventos e vagas restantes
+            let urgencyLevel = 'BAIXA';
+            let urgencyEmoji = '🟢';
+            const availableSpots = Math.max(1, monthsLeftInYear - futureEvents);
+            
+            if (futureEvents >= 7 || availableSpots <= 2) {
+                urgencyLevel = 'CRÍTICA';
+                urgencyEmoji = '🔴';
+            } else if (futureEvents >= 5 || availableSpots <= 3) {
+                urgencyLevel = 'ALTA';
+                urgencyEmoji = '🟡';
+            }
+            
+            return {
+                futureEvents,
+                monthsLeftInYear,
+                occupancyRate,
+                daysToEndYear,
+                urgencyLevel,
+                urgencyEmoji
+            };
+        }
+
+        function generatePsychologicalMessage() {
+            const nextMonth = findNextAvailableMonth();
+            const metrics = calculatePsychologyMetrics();
+            const totalSlots = agendaItems.length;
+            
+            // Elementos psicológicos dinâmicos focados na oportunidade
+            const availableSpots = Math.max(1, metrics.monthsLeftInYear - metrics.futureEvents);
+            const scarcityMessages = [
+                `OPORTUNIDADE ÚNICA: Vagas limitadas para anfitriões!`,
+                `ÚLTIMA CHANCE: Poucas datas ainda disponíveis!`,
+                `SEJA O PRÓXIMO: Transforme vidas em sua casa!`
+            ];
+            
+            const timeMessages = [
+                `⏱️ O ano está passando rapidamente`,
+                `📅 Aproveite enquanto há tempo`,
+                `⚡ As melhores oportunidades não esperam`
+            ];
+            
+            const emotionalTriggers = [
+                'Sua casa pode ser o próximo lugar onde vidas são transformadas',
+                'Seja o anfitrião que mudará histórias para sempre',
+                'Abra suas portas e transforme destinos',
+                'Sua hospitalidade pode salvar uma vida'
+            ];
+            
+            const urgencyActions = [
+                `${metrics.urgencyEmoji} OPORTUNIDADE IMPERDÍVEL`,
+                '🎯 SEJA UM ANFITRIÃO TRANSFORMADOR',
+                '⭐ IMPACTE VIDAS EM SUA CASA'
+            ];
+            
+            // Selecionar mensagens aleatórias para variação
+            const randomScarcity = scarcityMessages[Math.floor(Math.random() * scarcityMessages.length)];
+            const randomTime = timeMessages[Math.floor(Math.random() * timeMessages.length)];
+            const randomEmotion = emotionalTriggers[Math.floor(Math.random() * emotionalTriggers.length)];
+            const randomUrgency = urgencyActions[Math.floor(Math.random() * urgencyActions.length)];
+            
+            return `🔥 ${randomScarcity} ${randomTime} • APENAS ${nextMonth} ainda livre! ${randomUrgency} • ${randomEmotion} 📱 COORDENAÇÃO G300: <a href="https://wa.me/559499496169" target="_blank" style="color: #32cd32; font-weight: bold; text-decoration: none;">📲 CHAME AGORA NO WHATSAPP</a> - NÃO deixe essa chance passar!`;
         }
 
         // Interactive features removed
