@@ -1543,17 +1543,55 @@
             };
         }
 
+        function getBookedMonthsFromCurrent() {
+            const today = new Date();
+            const currentMonth = today.getMonth(); // 0-11
+            const currentYear = today.getFullYear();
+            const monthNames = [
+                'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+            ];
+            
+            // Get all months that have events scheduled from current month onwards
+            const bookedMonths = new Set();
+            agendaItems.forEach(item => {
+                const eventDate = parseDate(item.date);
+                if (eventDate >= today) {
+                    const eventMonth = eventDate.getMonth();
+                    const eventYear = eventDate.getFullYear();
+                    
+                    // Only consider events in current year from current month onwards
+                    if (eventYear === currentYear && eventMonth >= currentMonth) {
+                        bookedMonths.add(eventMonth);
+                    }
+                }
+            });
+            
+            // Convert to month names and sort
+            const bookedMonthNames = Array.from(bookedMonths)
+                .sort((a, b) => a - b)
+                .map(monthIndex => monthNames[monthIndex]);
+            
+            return bookedMonthNames;
+        }
+
         function generatePsychologicalMessage() {
             const nextMonth = findNextAvailableMonth();
             const metrics = calculatePsychologyMetrics();
             const totalSlots = agendaItems.length;
             
+            // Encontrar meses lotados a partir do mês atual
+            const bookedMonths = getBookedMonthsFromCurrent();
+            const bookedMonthsText = bookedMonths.length > 0 
+                ? `${bookedMonths.join(', ')} já estão lotados!` 
+                : 'Várias datas já estão ocupadas!';
+            
             // Elementos psicológicos dinâmicos focados na oportunidade
             const availableSpots = Math.max(1, metrics.monthsLeftInYear - metrics.futureEvents);
             const scarcityMessages = [
-                `OPORTUNIDADE ÚNICA: Vagas limitadas para anfitriões!`,
-                `ÚLTIMA CHANCE: Poucas datas ainda disponíveis!`,
-                `SEJA O PRÓXIMO: Transforme vidas em sua casa!`
+                `ATENÇÃO: ${bookedMonthsText}`,
+                `ALERTA: ${bookedMonthsText} Reserve JÁ!`,
+                `URGENTE: ${bookedMonthsText} Não perca sua vez!`
             ];
             
             const timeMessages = [
@@ -1581,7 +1619,7 @@
             const randomEmotion = emotionalTriggers[Math.floor(Math.random() * emotionalTriggers.length)];
             const randomUrgency = urgencyActions[Math.floor(Math.random() * urgencyActions.length)];
             
-            return `🔥 ${randomScarcity} ${randomTime} • APENAS ${nextMonth} ainda livre! ${randomUrgency} • ${randomEmotion} 📱 COORDENAÇÃO G300: <a href="https://wa.me/559499496169" target="_blank" style="color: #32cd32; font-weight: bold; text-decoration: none;">📲 CHAME AGORA NO WHATSAPP</a> - NÃO deixe essa chance passar!`;
+            return `🔥 ${randomScarcity} ${randomTime} • APENAS ${nextMonth} ainda livre! ${randomUrgency} • ${randomEmotion} 📱 COORDENAÇÃO G300: <a href="https://wa.me/5594992496169" target="_blank" style="color: #32cd32; font-weight: bold; text-decoration: none;">📲 CHAME AGORA NO WHATSAPP</a> - NÃO deixe essa chance passar!`;
         }
 
         // Interactive features removed
